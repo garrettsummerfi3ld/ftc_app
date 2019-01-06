@@ -39,6 +39,7 @@ import com.qualcomm.robotcore.util.RobotLog;
 import com.qualcomm.robotcore.util.TypeConversion;
 
 import java.util.concurrent.locks.Lock;
+import java.util.Locale;
 
 /**
  * An example of a linear op mode that shows how to change the I2C address.
@@ -136,8 +137,8 @@ public class ConceptI2cAddressChange extends LinearOpMode {
       count++;
       // if we go too long with failure, we probably are expecting the wrong bytes.
       if (count >= 10)  {
-        telemetry.addData("I2cAddressChange", String.format("Looping too long with no change, probably have the wrong address. Current address: 8bit=0x%02x", currentAddress.get8Bit()));
-        hardwareMap.irSeekerSensor.get(String.format("Looping too long with no change, probably have the wrong address. Current address: 8bit=0x%02x", currentAddress.get8Bit()));
+        telemetry.addData("I2cAddressChange", String.format(Locale.getDefault(), "Looping too long with no change, probably have the wrong address. Current address: 8bit=0x%02x", currentAddress.get8Bit()));
+        hardwareMap.irSeekerSensor.get(String.format(Locale.getDefault(), "Looping too long with no change, probably have the wrong address. Current address: 8bit=0x%02x", currentAddress.get8Bit()));
         telemetry.update();
       }
     }
@@ -171,7 +172,7 @@ public class ConceptI2cAddressChange extends LinearOpMode {
 
     telemetry.addData("I2cAddressChange", "Successfully changed the I2C address. New address: 8bit=0x%02x", newAddress.get8Bit());
     telemetry.update();
-    RobotLog.i("Successfully changed the I2C address." + String.format("New address: 8bit=0x%02x", newAddress.get8Bit()));
+    RobotLog.i("Successfully changed the I2C address." + String.format(Locale.getDefault(), "New address: 8bit=0x%02x", newAddress.get8Bit()));
 
     /**** IMPORTANT NOTE ******/
     // You need to add a line like this at the top of your op mode
@@ -188,9 +189,9 @@ public class ConceptI2cAddressChange extends LinearOpMode {
       StringBuilder s = new StringBuilder(300 * 4);
       String mismatch = "";
       for (int i = 0; i < byteArray.length; i++) {
-        s.append(String.format("expected: %02x, got: %02x \n", TypeConversion.unsignedByteToInt( (byte) byteArray[i]), cache[i]));
+        s.append(String.format(Locale.getDefault(), "expected: %02x, got: %02x \n", TypeConversion.unsignedByteToInt( (byte) byteArray[i]), cache[i]));
         if (TypeConversion.unsignedByteToInt(cache[i]) != TypeConversion.unsignedByteToInt( (byte) byteArray[i])) {
-          mismatch = String.format("i: %d, byteArray[i]: %02x, cache[i]: %02x", i, byteArray[i], cache[i]);
+          mismatch = String.format(Locale.getDefault(), "i: %d, byteArray[i]: %02x, cache[i]: %02x", i, byteArray[i], cache[i]);
           allMatch = false;
         }
       }

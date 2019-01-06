@@ -43,6 +43,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
+import java.util.Locale;
+
 /*
  * This is an example LinearOpMode that shows how to use Kauai Labs navX Micro Robotics Navigation
  * Sensor. It assumes that the sensor is configured with a name of "navx".
@@ -116,7 +118,7 @@ public class SensorKLNavxMicro extends LinearOpMode {
     }
 
     String formatRate(float rate) {
-        return String.format("%.3f", rate);
+        return String.format(Locale.getDefault(), "%.3f", rate);
     }
 
     String formatAngle(AngleUnit angleUnit, double angle) {
@@ -124,6 +126,6 @@ public class SensorKLNavxMicro extends LinearOpMode {
     }
 
     String formatDegrees(double degrees){
-        return String.format("%.1f", AngleUnit.DEGREES.normalize(degrees));
+        return String.format(Locale.getDefault(), "%.1f", AngleUnit.DEGREES.normalize(degrees));
     }
 }

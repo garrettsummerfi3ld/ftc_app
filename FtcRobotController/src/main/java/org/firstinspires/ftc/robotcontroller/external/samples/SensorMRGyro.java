@@ -42,6 +42,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngularVelocity;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 
+import java.util.Locale;
+
 /*
  * This is an example LinearOpMode that shows how to use the Modern Robotics Gyro.
  *
@@ -148,15 +150,15 @@ public class SensorMRGyro extends LinearOpMode {
   }
 
   String formatRaw(int rawValue) {
-    return String.format("%d", rawValue);
+    return String.format(Locale.getDefault(), "%d", rawValue);
   }
 
   String formatRate(float rate) {
-    return String.format("%.3f", rate);
+    return String.format(Locale.getDefault(), "%.3f", rate);
   }
 
   String formatFloat(float rate) {
-    return String.format("%.3f", rate);
+    return String.format(Locale.getDefault(), "%.3f", rate);
   }
 
 }

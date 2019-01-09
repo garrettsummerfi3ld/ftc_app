@@ -18,24 +18,24 @@
 # 4 on bad javac version
 function checkJava() {
   # Check command not found
-  $(java -version 2> /dev/null)
+  $(java -version &> /dev/null)
   if [[ ${?} == 127 ]]; then
     return 1
   fi
 
   # Java must be 1.8
-  local JAVA_VERSION=$(java -version)
-  if [[ JAVA_VERSION != *"1.8."* ]]; then
+  local JAVA_VERSION=$(java -version 2>&1)
+  if [[ $JAVA_VERSION != *"1.8."* ]]; then
     return 2
   fi
 
-  $(javac -version 2> /dev/null)
+  # $(javac -version &> /dev/null)
   if [[ ${?} == 127 ]]; then
     return 3
   fi
 
-  local JAVAC_VERSION=$(javac -version)
-  if [[ JAVAC_VERSION != *"1.8."* ]]; then
+  local JAVAC_VERSION=$(javac -version 2>&1)
+  if [[ $JAVAC_VERSION != *"1.8."* ]]; then
     return 4
   fi
 
@@ -43,7 +43,8 @@ function checkJava() {
 }
 
 function installJava() {
-  yum install 
+  yum install java-1.8.0-openjdk
+  yum install java-1.8.0-openjdk-devel
 }
 
 if [[ $EUID -ne 0 ]]; then
@@ -52,7 +53,8 @@ if [[ $EUID -ne 0 ]]; then
 fi
 
 echo "Checking Java version..."
-if checkJava; then
+checkJava
+if [[ ${?} -ne 0 ]]; then
   echo "JDK 1.8 not installed, proceeding with OpenJDK installation"
   installJava
 else

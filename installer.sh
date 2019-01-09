@@ -42,9 +42,21 @@ function checkJava() {
   return 0
 }
 
+function installJavaFedora() {
+  sudo yum install java-1.8.0-openjdk java-1.8.0-openjdk-devel
+}
+
+function installJavaUbuntu() {
+  sudo apt-get install openjdk-8-jre openjdk-8-jdk
+}
+
 function installJava() {
-  sudo yum install java-1.8.0-openjdk
-  sudo yum install java-1.8.0-openjdk-devel
+  local HOST_INFO=$(hostnamectl 2>&1)
+  if [[ $HOST_INFO == *"Ubuntu"* ]]; then
+    installJavaUbuntu
+  elif [[ $HOST_INFO == *"Fedora"* ]]; then
+    installJavaFedora
+  fi
 }
 
 # 1: binary not found in the .android folder

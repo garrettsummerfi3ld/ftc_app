@@ -11,6 +11,21 @@
 #  - Guided install - stretch goal
 #  - Start with options and install all
 
+function yesNo() {
+  read answer
+  case $answer in
+    "y"* | "Y"*)
+      return 0
+      ;;
+    "n"* | "N"*)
+      return 1
+      ;;
+    *)
+      return 2
+      ;;
+  esac
+}
+
 # 0 on success
 # 1 on no java
 # 2 on bad java version
@@ -109,33 +124,59 @@ function setLocalProperties() {
   echo "sdk.dir=${SDK_HOME}" >> local.properties
 }
 
+# BEGIN SCRIPT
+
+# ROOT CHECK
 if [[ ${EUID} == 0 ]]; then
   echo "WARNING: Installer is not designed to run as root, continue at your own risk, ctrl-C to exit (recommended)"
   read
 fi
 
+# JAVA CHECK
 echo "Checking Java version..."
 checkJava
 if [[ ${?} -ne 0 ]]; then
-  echo "JDK 1.8 not installed, proceeding with OpenJDK installation"
-  installJava
+  printf "JDK 1.8 not installed, install openJDK? [y/n]:"
+  if yesNo; then
+    installJava
+  else
+    echo "Skipping Java installation"
+  fi
 else
   echo "Java installed"
 fi
 
-echo "Checking for the Android SDK in the ~/.android folder..."
+# SDK CHECK
+echo "Checking for the Android SDK in the ${SDK_HOME} folder..."
 checkAndroidSDK
 if [[ ${?} -ne 0 ]]; then
   echo "Downloading the Android SDK and placing it in ${SDK_HOME}"
-  echo "Note: By continuing you agree to the Google terms and conditions (Enter - continue, ctrl-C - cancel)"
-  read
-  downloadAndroidSDK
+  printf "Note: By continuing you agree to the Google terms and conditions [y/n]:"
+  if yesNo; then
+    downloadAndroidSDK
+  else
+    echo "Android SDK installation cancelled, now exiting"
+    exit 1
+  fi
 else
   echo "Android SDK found"
 fi
 
-echo "Now checking/downloading necessary Android packages for ftc_app..."
-downloadAndroidPackages
+# INSTALL PACKAGES AND CLEANUP
+printf "Would you like to download/check for necessary Android packages for ftc_app? [y/n]:"
+if yesNo; then
+  echo "Now checking/downloading necessary Android packages for ftc_app..."
+  downloadAndroidPackages
+else
+  echo "Skipping SDK check"
+fi
 
-echo "Setting up local.properties..."
-setLocalProperties
+printf "Would you like the installer to setup local.properties for gradle (recommended)? [y/n]:"
+if yesNo; then
+  echo "Setting up local.properties..."
+  setLocalProperties
+else
+  echo "Skipping local.properties setup..."
+fi
+
+echo "Installer finished, exiting successfully"

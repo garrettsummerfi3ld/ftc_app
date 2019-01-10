@@ -11,7 +11,17 @@
 #  - Guided install - stretch goal
 #  - Start with options and install all
 
+FORCE_YES=0
+
+function helpMessage() {
+  echo "Usage: y - force yes on installations"
+}
+
 function yesNo() {
+  if [[ $FORCE_YES == 1 ]]; then
+    return 0
+  fi
+
   read answer
   case $answer in
     "y"* | "Y"*)
@@ -130,6 +140,14 @@ function setLocalProperties() {
 if [[ ${EUID} == 0 ]]; then
   echo "WARNING: Installer is not designed to run as root, continue at your own risk, ctrl-C to exit (recommended)"
   read
+fi
+
+# CHECK ARGS
+if [[ $1 == "-h" ]]; then
+  echo $(helpMessage)
+  exit 0
+elif [[ $1 == "y" ]]; then
+  FORCE_YES=1
 fi
 
 # JAVA CHECK

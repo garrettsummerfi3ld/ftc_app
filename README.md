@@ -1,5 +1,5 @@
-# FTC App without Android Studio
-  This fork of `ftc_app` aims to provide installation scripts for Linux more up-to-date dependencies for the Android app.
+# FTC App
+  This fork of `ftc_app` aims to provide installation scripts for Linux and more up-to-date dependencies for the Android app.
 
 ## Supported Systems:
   - Fedora 29 (tested)

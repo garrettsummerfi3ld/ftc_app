@@ -59,9 +59,11 @@ function installJava() {
   fi
 }
 
+SDK_HOME=${HOME}/Android
+
 # 1: binary not found in the .android folder
 function checkAndroidSDK() {
-  $(~/.android/tools/bin/sdkmanager --version &> /dev/null)
+  $(${SDK_HOME}/tools/bin/sdkmanager --version &> /dev/null)
   if [[ ${?} == 127 ]]; then
     return 1
   fi
@@ -75,22 +77,22 @@ function downloadAndroidSDK() {
   wget "https://dl.google.com/android/repository/"${SDK_ZIP}
 
   # Check for ~/.android
-  ls ${HOME}/.android &> /dev/null
+  ls ${SDK_HOME} &> /dev/null
   if [[ ${?} -gt 0 ]]; then
-    mkdir ${HOME}/.android
+    mkdir ${SDK_HOME}
   fi
 
-  unzip ${SDK_ZIP} -d ${HOME}/.android
+  unzip ${SDK_ZIP} -d ${SDK_HOME}
   
   # Check for repositories.cfg
-  ls ~/.android/repositories.cfg &> /dev/null
+  ls ${SDK_HOME}/repositories.cfg &> /dev/null
   if [[ ${?} -ne 0 ]]; then
-    touch ~/.android/repositories.cfg
+    touch ${SDK_HOME}/repositories.cfg
   fi
 }
 
 function downloadAndroidPackages() {
-  local SDK_MANAGER=~/.android/tools/bin/sdkmanager
+  local SDK_MANAGER=${SDK_HOME}/tools/bin/sdkmanager
   local PACKAGE_LIST="platform-tools platforms;android-28 build-tools;28.0.3 sources;android-28"
 
   ${SDK_MANAGER} ${PACKAGE_LIST}
@@ -104,7 +106,7 @@ function setLocalProperties() {
     return 0
   fi
 
-  echo "sdk.dir=${HOME}/.android" >> local.properties
+  echo "sdk.dir=${SDK_HOME}" >> local.properties
 }
 
 if [[ ${EUID} == 0 ]]; then
@@ -124,7 +126,7 @@ fi
 echo "Checking for the Android SDK in the ~/.android folder..."
 checkAndroidSDK
 if [[ ${?} -ne 0 ]]; then
-  echo "Downloading the Android SDK and placing it in ${HOME}/.android"
+  echo "Downloading the Android SDK and placing it in ${SDK_HOME}"
   echo "Note: By continuing you agree to the Google terms and conditions (Enter - continue, ctrl-C - cancel)"
   read
   downloadAndroidSDK

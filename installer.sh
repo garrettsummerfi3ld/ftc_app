@@ -18,10 +18,12 @@ function helpMessage() {
 }
 
 function yesNo() {
+  # yes if force yes is on
   if [[ $FORCE_YES == 1 ]]; then
     return 0
   fi
 
+  # Use return status for answer
   read answer
   case $answer in
     "y"* | "Y"*)
@@ -75,6 +77,7 @@ function installJavaUbuntu() {
   sudo apt-get install openjdk-8-jre openjdk-8-jdk
 }
 
+# Check for distro
 function installJava() {
   local HOST_INFO=$(hostnamectl 2>&1)
   if [[ $HOST_INFO == *"Ubuntu"* ]]; then
@@ -86,9 +89,10 @@ function installJava() {
 
 SDK_HOME=${HOME}/Android
 
-# 1: binary not found in the .android folder
+# 1: binary not found in the ~/Android folder
 function checkAndroidSDK() {
-  $(${SDK_HOME}/tools/bin/sdkmanager --version &> /dev/null)
+  # Check if sdkmanager exists
+  ${SDK_HOME}/tools/bin/sdkmanager --version &> /dev/null
   if [[ ${?} == 127 ]]; then
     return 1
   fi
@@ -101,7 +105,7 @@ function downloadAndroidSDK() {
   # Download the zip file
   wget "https://dl.google.com/android/repository/"${SDK_ZIP}
 
-  # Check for ~/.android
+  # Check for ~/Android
   ls ${SDK_HOME} &> /dev/null
   if [[ ${?} -gt 0 ]]; then
     mkdir ${SDK_HOME}
@@ -116,6 +120,7 @@ function downloadAndroidSDK() {
   fi
 }
 
+# Note: if the package is installed, the manager will not download it
 function downloadAndroidPackages() {
   local SDK_MANAGER=${SDK_HOME}/tools/bin/sdkmanager
   local PACKAGE_LIST="platform-tools platforms;android-28 build-tools;28.0.3 sources;android-28"
@@ -124,6 +129,7 @@ function downloadAndroidPackages() {
 }
 
 function setLocalProperties() {
+  # Check if local.properties already exists
   ls local.properties &> /dev/null
   if [[ ${?} -ne 0 ]]; then
     touch local.properties

@@ -20,8 +20,8 @@
   - `Makefile` - Simple `make` commands for building and installing the app on your phone. This could easily be translate into VS Code build tasks. Available commands:
     - `all` - runs `build`
     - `build` - executes the default `gradlew build` command
-    - `install` - uses ADB to install FTC Robot Controller (built from `TeamCode`) on your phone
-    - `installDriverStation` - same as `install`, but the provided Driver Station apk
+    - `install` - executes the default `gradlew installDebug` command
+    - `installDriverStation` - uses ADB (default location) to install the provided driver station APK
     - `clean` - executes the default `gradlew clean` command
 
   - Build Updates: 

@@ -66,7 +66,7 @@ function installJavaUbuntu() {
 }
 
 function installJava() {
-  local HOST_INFO=$(hostnamectl 2>&1)
+  local HOST_INFO=$(hostnamectl | grep "Operating System:" 2>&1)
   if [[ $HOST_INFO == *"Ubuntu"* ]]; then
     installJavaUbuntu
   elif [[ $HOST_INFO == *"Fedora"* ]]; then

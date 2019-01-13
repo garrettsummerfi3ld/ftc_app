@@ -11,6 +11,9 @@
 #  - Guided install - stretch goal
 #  - Start with options and install all
 
+#VARIABLES
+local HOST_INFO=$(hostnamectl | grep "Operating System:" 2>&1)
+
 function yesNo() {
   read answer
   case $answer in
@@ -25,7 +28,19 @@ function yesNo() {
       ;;
   esac
 }
+# Chcck git installation
+function checkGit() {
+  git version &> /dev/null
+  if [[ ${?} == 127 ]]; then
+    echo "Git installed"
+  fi
 
+  if [[ $HOST_INFO == *"Ubuntu"* ]]; then
+    sudo apt install git
+  elif [[ $HOST_INFO == *"Fedora"* ]]; then
+    sudo yum install git
+  fi
+}
 # 0 on success
 # 1 on no java
 # 2 on bad java version
@@ -126,11 +141,17 @@ function setLocalProperties() {
 
 # BEGIN SCRIPT
 
+# DISTRO CHECK
+echo "Checking installed distro..."
+echo $(tput setaf 1) $HOST_INFO $(tput sgr 0)
+
 # ROOT CHECK
 if [[ ${EUID} == 0 ]]; then
   echo "WARNING: Installer is not designed to run as root, continue at your own risk, ctrl-C to exit (recommended)"
   read
 fi
+# GIT CHECK
+
 
 # JAVA CHECK
 echo "Checking Java version..."

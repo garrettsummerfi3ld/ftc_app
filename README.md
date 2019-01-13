@@ -3,15 +3,16 @@
 
 ## Supported Systems:
   - Fedora 29 (tested)
-  - Ubuntu 18 (untested)
+  - Ubuntu 18 (tested)
 
 ## Why?
-  I don't like Android Studio.
+  Tools to do whatever your needs seem fit is the best way to get all set up is sometimes a pain. That one dependency could be missing or if you're running a full setup of a teams programming division, this is a pain to go and download everything and anything.
 
-  I personally think VS Code is the best IDE, but regardless you should be able to use whatever you want.
+  This is going to fix all the issues with setting up a default environment for FTC Games
 
 ## What's New
   - `installer.sh` - This is a pretty basic shell script that will check/perform the following things:
+    - Check for local `git` installation
     - Check for `java` and `javac` 1.8 on the system. If not found, the script will install `openjdk` (Ubuntu and Fedora support)
     - Check for the Android SDK Manager in `~/Android` (this is the default location for Android Studio as well). If not present, the installer will download the sdk-tools standalone command line tool and unzip it into `~/Android`
     - Use the SDK Manager to install `platform-tools`, and build tools for `android-28`

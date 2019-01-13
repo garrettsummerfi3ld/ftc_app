@@ -34,13 +34,15 @@ function checkGit() {
   if [[ ${?} == 127 ]]; then
     echo "Git installed"
   fi
-
+}
+function installGit() {
   if [[ $HOST_INFO == *"Ubuntu"* ]]; then
     sudo apt install git
   elif [[ $HOST_INFO == *"Fedora"* ]]; then
     sudo yum install git
   fi
 }
+
 # 0 on success
 # 1 on no java
 # 2 on bad java version
@@ -72,20 +74,12 @@ function checkJava() {
   return 0
 }
 
-function installJavaFedora() {
-  sudo yum install java-1.8.0-openjdk java-1.8.0-openjdk-devel
-}
-
-function installJavaUbuntu() {
-  sudo apt-get install openjdk-8-jre openjdk-8-jdk
-}
-
 function installJava() {
   local HOST_INFO=$(hostnamectl | grep "Operating System:" 2>&1)
   if [[ $HOST_INFO == *"Ubuntu"* ]]; then
-    installJavaUbuntu
+      sudo apt-get install openjdk-8-jre openjdk-8-jdk
   elif [[ $HOST_INFO == *"Fedora"* ]]; then
-    installJavaFedora
+    sudo yum install java-1.8.0-openjdk java-1.8.0-openjdk-devel
   fi
 }
 

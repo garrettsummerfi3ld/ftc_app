@@ -9,7 +9,7 @@ install:
 	./gradlew installDebug
 
 installDriverStation:
-	${HOME}/Android/platform-tools/adb install doc/apk/FtcDriverStation-release.apk
+	${HOME}/Android/Sdk/platform-tools/adb install doc/apk/FtcDriverStation-release.apk
 
 clean:
 	./gradlew clean

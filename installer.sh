@@ -87,9 +87,9 @@ function installJava() {
   fi
 }
 
-SDK_HOME=${HOME}/Android
+SDK_HOME=${HOME}/Android/Sdk
 
-# 1: binary not found in the ~/Android folder
+# 1: binary not found in the ~/Android/Sdk folder
 function checkAndroidSDK() {
   # Check if sdkmanager exists
   ${SDK_HOME}/tools/bin/sdkmanager --version &> /dev/null
@@ -105,10 +105,10 @@ function downloadAndroidSDK() {
   # Download the zip file
   wget "https://dl.google.com/android/repository/"${SDK_ZIP}
 
-  # Check for ~/Android
+  # Check for ~/Android and ~/Android/Sdk
   ls ${SDK_HOME} &> /dev/null
   if [[ ${?} -gt 0 ]]; then
-    mkdir ${SDK_HOME}
+    mkdir -p ${SDK_HOME}
   fi
 
   unzip ${SDK_ZIP} -d ${SDK_HOME}

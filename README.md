@@ -15,7 +15,7 @@
     - Check for `java` and `javac` 1.8 on the system. If not found, the script will install `openjdk` (Ubuntu and Fedora support)
     - Check for the Android SDK Manager in `~/Android` (this is the default location for Android Studio as well). If not present, the installer will download the sdk-tools standalone command line tool and unzip it into `~/Android`
     - Use the SDK Manager to install `platform-tools`, and build tools for `android-28`
-    - Then, if the `local.properties` file has not been set for gradle, the file will be created and `sdk.dir` will be set to `~/Android`
+    - Then, if the `local.properties` file has not been set for gradle, the file will be created and `sdk.dir` will be set to `~/Android/Sdk`
 
   - `Makefile` - Simple `make` commands for building and installing the app on your phone. This could easily be translate into VS Code build tasks. Available commands:
     - `all` - runs `build`

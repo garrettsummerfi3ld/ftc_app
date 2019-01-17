@@ -5,11 +5,11 @@ all: build
 build:
 	./gradlew build
 
-install: build TeamCode/build/outputs/apk/debug/TeamCode-debug.apk
-	${HOME}/Android/platform-tools/adb install TeamCode/build/outputs/apk/debug/TeamCode-debug.apk
+install:
+	./gradlew installDebug
 
 installDriverStation:
-	${HOME}/Android/platform-tools/adb install doc/apk/FtcDriverStation-release.apk
+	${HOME}/Android/Sdk/platform-tools/adb install doc/apk/FtcDriverStation-release.apk
 
 clean:
 	./gradlew clean

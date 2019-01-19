@@ -28,20 +28,7 @@ function yesNo() {
       ;;
   esac
 }
-# Chcck git installation
-function checkGit() {
-  git version &> /dev/null
-  if [[ ${?} == 127 ]]; then
-    echo "Git installed"
-  fi
-}
-function installGit() {
-  if [[ $HOST_INFO == *"Ubuntu"* ]]; then
-    sudo apt install git
-  elif [[ $HOST_INFO == *"Fedora"* ]]; then
-    sudo yum install git
-  fi
-}
+
 
 # 0 on success
 # 1 on no java
@@ -80,6 +67,37 @@ function installJava() {
       sudo apt-get install openjdk-8-jre openjdk-8-jdk
   elif [[ $HOST_INFO == *"Fedora"* ]]; then
     sudo yum install java-1.8.0-openjdk java-1.8.0-openjdk-devel
+  fi
+}
+
+# Chcck git installation
+function checkGit() {
+  local GIT_VERSION=$(git --version)
+  if [[ $GIT_VERSION != *"git version"* ]]; then
+    return 1
+  fi
+  
+  return 0
+}
+
+# Install git depending on distro (WIP)
+function installGit() {
+  if [[ $HOST_INFO == *"Ubuntu"* ]]; then
+    sudo apt install git
+  elif [[ $HOST_INFO == *"Fedora"* ]]; then
+    sudo yum install git
+  fi
+}
+
+# Clones the repo from a link
+function gitRepoDownload() {
+  read -p "Git repo for download (no input clones the official FTC repo): " repoLink
+  if [ -z "$repoLink"]; then
+    mkdir ~/AndroidProjects && cd ~/AndroidProjects
+    git clone https://github.com/ftctechnh/ftc_app.git
+  else
+    mkdir ~/AndroidProjects && cd ~/AndroidProjects
+    git clone $repoLink
   fi
 }
 
@@ -145,7 +163,18 @@ if [[ ${EUID} == 0 ]]; then
   read
 fi
 # GIT CHECK
-
+echo "Checking git..."
+checkGit
+if [[ ${?} -ne 0]]; then
+  printf "Git is not installed, install git? [y/n]"
+  if yesNo; then
+    installGit
+  else
+    echo "Skipping git installation"
+  fi
+else
+  echo "Git installed"
+fi
 
 # JAVA CHECK
 echo "Checking Java version..."
@@ -192,6 +221,14 @@ if yesNo; then
   setLocalProperties
 else
   echo "Skipping local.properties setup..."
+fi
+
+printf "Would you like the installer to clone a specified repo? [y/n]"
+if yesNo;
+  echo "Cloning the repository..."
+  gitRepoDownload
+else
+  echo "Skipping cloning setup repo"
 fi
 
 echo "Installer finished, exiting successfully"

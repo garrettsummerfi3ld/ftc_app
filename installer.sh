@@ -17,9 +17,6 @@ function helpMessage() {
   echo "Usage: y - force yes on installations"
 }
 
-#VARIABLES
-local HOST_INFO=$(hostnamectl | grep "Operating System:" 2>&1)
-
 function yesNo() {
   # yes if force yes is on
   if [[ $FORCE_YES == 1 ]]; then
@@ -40,8 +37,13 @@ function yesNo() {
       ;;
   esac
 }
-
-
+function checkDistro() {
+  HOST_INFO=$(hostnamectl | grep "Operating System:" 2>&1)
+  if [$HOST_INFO != *"Operating System"* ]; then
+    echo $(tput setaf 1) "UNABLE TO CHECK DISTRO, USE AT OWN RISK" $(tput setaf 0)
+  fi
+  echo $HOST_INFO
+}
 # 0 on success
 # 1 on no java
 # 2 on bad java version
@@ -106,7 +108,7 @@ function installGit() {
 # Returns 1 if a repo is not found
 function checkRepo() {
   local LOCAL_REPO=$(find ~ -name "ftc_app" -type d)
-  if [[ $LOCAL_REPO != *"ftc_app"*]]; then
+  if [ $LOCAL_REPO != *"ftc_app"*]; then
     return 1
   fi
 
@@ -184,7 +186,7 @@ function setLocalProperties() {
 
 # DISTRO CHECK
 echo "Checking installed distro..."
-echo $(tput setaf 1) $HOST_INFO $(tput sgr 0)
+checkDistro
 
 # ROOT CHECK
 if [[ ${EUID} == 0 ]]; then

@@ -27,3 +27,7 @@ build/
 *ASUS_PC_01*
 
 .vscode
+
+\.project
+
+\.settings/

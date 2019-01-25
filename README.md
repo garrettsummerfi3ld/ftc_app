@@ -1,5 +1,4 @@
-# FTC App
-[![Build Status](https://travis-ci.org/garrettsummerfi3ld/ftc_app_installer.svg?branch=master)](https://travis-ci.org/garrettsummerfi3ld/ftc_app_installer)
+# FTC App [![Build Status](https://travis-ci.org/garrettsummerfi3ld/ftc_app_installer.svg?branch=master)](https://travis-ci.org/garrettsummerfi3ld/ftc_app_installer)
 This fork of `ftc_app` aims to provide installation scripts for Linux and more up-to-date dependencies for the Android app.
 
 ## Supported Systems:

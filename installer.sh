@@ -17,9 +17,6 @@ function helpMessage() {
   echo "Usage: y - force yes on installations"
 }
 
-#VARIABLES
-local HOST_INFO=$(hostnamectl | grep "Operating System:" 2>&1)
-
 function yesNo() {
   # yes if force yes is on
   if [[ $FORCE_YES == 1 ]]; then
@@ -40,8 +37,13 @@ function yesNo() {
       ;;
   esac
 }
-
-
+function checkDistro() {
+  HOST_INFO=$(hostnamectl | grep "Operating System:" 2>&1)
+  if [$HOST_INFO != *"Operating System"* ]; then
+    echo $(tput setaf 1) "UNABLE TO CHECK DISTRO, USE AT OWN RISK" $(tput setaf 0)
+  fi
+  echo $HOST_INFO
+}
 # 0 on success
 # 1 on no java
 # 2 on bad java version
@@ -83,6 +85,7 @@ function installJava() {
 }
 
 # Chcck git installation
+# Returns 1 if git is not found
 function checkGit() {
   local GIT_VERSION=$(git --version)
   if [[ $GIT_VERSION != *"git version"* ]]; then
@@ -101,15 +104,27 @@ function installGit() {
   fi
 }
 
+# Checks for a local installed repo
+# Returns 1 if a repo is not found
+function checkRepo() {
+  local LOCAL_REPO=$(find ~ -name "ftc_app" -type d)
+  if [ $LOCAL_REPO != *"ftc_app"*]; then
+    return 1
+  fi
+
+  return 0
+}
+
 # Clones the repo from a link
 function gitRepoDownload() {
-  read -p "Git repo for download (no input clones the official FTC repo): " repoLink
-  if [ -z "$repoLink"]; then
+  local MASTER_REPO="https://github.com/ftctechnh/ftc_app.git"
+  read -p "Git repo for download (no input clones the official FTC repo): " REPO_LINK
+  if [ -z "$REPO_LINK"]; then
     mkdir ~/AndroidProjects && cd ~/AndroidProjects
-    git clone https://github.com/ftctechnh/ftc_app.git
+    git clone $MASTER_REPO
   else
     mkdir ~/AndroidProjects && cd ~/AndroidProjects
-    git clone $repoLink
+    git clone $REPO_LINK
   fi
 }
 
@@ -127,6 +142,7 @@ function checkAndroidSDK() {
 }
 
 function downloadAndroidSDK() {
+  # This is hardcoded becasue as far as what I know this is a limitation of what Google provides as far as links
   local SDK_ZIP="sdk-tools-linux-4333796.zip"
   # Download the zip file
   wget "https://dl.google.com/android/repository/"${SDK_ZIP}
@@ -170,13 +186,22 @@ function setLocalProperties() {
 
 # DISTRO CHECK
 echo "Checking installed distro..."
-echo $(tput setaf 1) $HOST_INFO $(tput sgr 0)
+checkDistro
 
 # ROOT CHECK
 if [[ ${EUID} == 0 ]]; then
   echo "WARNING: Installer is not designed to run as root, continue at your own risk, ctrl-C to exit (recommended)"
   read
 fi
+
+# CHECK ARGS
+if [[ $1 == "-h" ]]; then
+  echo $(helpMessage)
+  exit 0
+elif [[ $1 == "y" ]]; then
+  FORCE_YES=1
+fi
+
 # GIT CHECK
 echo "Checking git..."
 checkGit
@@ -191,13 +216,23 @@ else
   echo "Git installed"
 fi
 
-# CHECK ARGS
-if [[ $1 == "-h" ]]; then
-  echo $(helpMessage)
-  exit 0
-elif [[ $1 == "y" ]]; then
-  FORCE_YES=1
+# REPO CHECK
+echo "Checking for a local repo in the home directory..."
+checkRepo
+if [[${?} -ne 0]]; then
+  printf "Local repo is not found"
+  printf "This does not mean that there is not a local repo located on the computer, but the script could not locate it"
+  printf "Would you like the installer to clone a specified repo? [y/n]"
+  if yesNo;
+    echo "Cloning the repository..."
+    gitRepoDownload
+  else
+    echo "Skipping cloning setup repo"
+  fi
+else
+  echo "A local repo is located"
 fi
+
 
 # JAVA CHECK
 echo "Checking Java version..."
@@ -246,12 +281,5 @@ else
   echo "Skipping local.properties setup..."
 fi
 
-printf "Would you like the installer to clone a specified repo? [y/n]"
-if yesNo;
-  echo "Cloning the repository..."
-  gitRepoDownload
-else
-  echo "Skipping cloning setup repo"
-fi
 
 echo "Installer finished, exiting successfully"

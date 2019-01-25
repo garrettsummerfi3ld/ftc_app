@@ -23,4 +23,4 @@ after_success: |
   rm -rf kcov-master &&
   mkdir -p coverage &&
   kcov coverage script.sh &&
-  bash <(curl -s https://codecov.io/bash)
+  bash <(curl -s https://codecov.io/gh/garrettsummerfi3ld/ftc_app_installer)

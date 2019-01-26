@@ -1,12 +1,5 @@
 #!/usr/bin/env bash
-# TODO:
-#  - Java install
-#  - Gradle is handled by wrapper
-#  - SDK Installer manual download
-#  - Possibly install build tools, Gradle only warns about it
-#  - Support for Ubuntu (duh) and Fedora (because me)
-#  - OSX and Windows... I don't even know... Not in this file at least
-#
+
 # Format:
 #  - Guided install - stretch goal
 #  - Start with options and install all
@@ -37,6 +30,7 @@ function yesNo() {
       ;;
   esac
 }
+
 function checkDistro() {
   HOST_INFO=$(hostnamectl | grep "Operating System:" 2>&1)
   if [$HOST_INFO != *"Operating System"* ]; then
@@ -44,6 +38,7 @@ function checkDistro() {
   fi
   echo $HOST_INFO
 }
+
 # 0 on success
 # 1 on no java
 # 2 on bad java version

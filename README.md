@@ -1,13 +1,13 @@
-# FTC App
-[![Build Status](https://travis-ci.org/garrettsummerfi3ld/ftc_app_installer.svg?branch=master)](https://travis-ci.org/garrettsummerfi3ld/ftc_app_installer)
+# FTC App [![Build Status](https://travis-ci.org/garrettsummerfi3ld/ftc_app_installer.svg?branch=master)](https://travis-ci.org/garrettsummerfi3ld/ftc_app_installer)
+
 This fork of `ftc_app` aims to provide installation scripts for Linux and more up-to-date dependencies for the Android app.
 
-## Supported Systems:
+## Supported Systems
 
 - Fedora 29 (tested)
-- Ubuntu 18.04 + (tested)
+- Ubuntu 16.04 + (tested)
 
-## Why?
+## Why
 
 Tools to do whatever your needs seem fit is the best way to get all set up is sometimes a pain. That one dependency could be missing or if you're running a full setup of a teams programming division, this is a pain to go and download everything and anything.
 
@@ -40,14 +40,15 @@ This is going to fix all the issues with setting up a default environment for FT
   - Build scripts fixed to remove (most) gradle warnings
   - A few lint warnings fixed in example code
 
-## TODO:
+## TODO
 
 - Adding support for downloading and installing IDEs from the script if user requests
 - Support for more package systems and operating systems (Debian, Mint, Arch, and others)
 - Adding support for downloading tools such as GitKraken if user requests
+- Support for Windows and macOS
 
 ## Notes
 
-- This is a side project, and is by no means tested rigorously. Use at your own risk.
+- This is a side project, and is by no means tested rigorously. **Use at your own risk.**
 - Feel free to fork and pull request to make improvements!
 - Same goes for issues!
